@@ -45,11 +45,12 @@ export class AppLogger implements LoggerService {
     const logConsole = new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
-    
-      format: winston.format.simple(),
-         
-            
-      
+      #format: winston.format.simple(),
+      format: winston.format.combine(
+		winston.format.timestamp(),
+		winston.format.json()
+	),
+   
     });
 
     const transports = [logConsole];
