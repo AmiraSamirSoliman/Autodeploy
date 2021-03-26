@@ -45,7 +45,8 @@ export class AppLogger implements LoggerService {
     const logConsole = new winston.transports.Console({
       level: 'debug',
       handleExceptions: true,
-      format: format.simple(),
+      const winston = require('winston');
+      format: winston.format.simple(),
     });
 
     const transports = [logConsole];
@@ -60,7 +61,7 @@ export class AppLogger implements LoggerService {
       transports.push(slackTransport);
     }
 
-    this.logger = createLogger({
+    this.logger = winston.createLogger({
       transports,
     });
   }
