@@ -62,7 +62,7 @@ export class AppLogger implements LoggerService {
       transports.push(slackTransport);
     }
 
-    this.logger =winston.createLogger({
+    this.logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({ filename: 'combined.log' })
