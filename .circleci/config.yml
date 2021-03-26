@@ -192,7 +192,6 @@ jobs:
                   name: Backend security check
                   command: |
                       cd backend
-                      npm audit fix --audit-level=critical --force
                       npm install
                      
             - slack/notify:
