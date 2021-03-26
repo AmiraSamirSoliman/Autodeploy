@@ -63,11 +63,11 @@ export class AppLogger implements LoggerService {
     }
 
     this.logger =winston.createLogger({
-transports: [
-	new.winston.transports.Consol(),
-	new.winston.transports.File( {filename:'compined.log'} )
-	]
-    });
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
 	  
   }
 
