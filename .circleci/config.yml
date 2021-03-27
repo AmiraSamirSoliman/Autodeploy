@@ -18,7 +18,7 @@ commands:
                   when: on_fail
                   command: |
                       # Your code here
-                      aws s3 rb s3://prometheus-<< parameters.workflow-id >> --force  
+                      aws s3 rb s3://udapeople-<< parameters.workflow-id >> --force  
                       aws cloudformation delete-stack \
                           --stack-name "backend-stack-<< parameters.workflow-id >>"
                       aws cloudformation delete-stack \
@@ -304,6 +304,7 @@ jobs:
                       ./configure
                       make
                       sudo make install
+                      npm i migrations
                       npm run migrations > migration.log
                       export migration_status=$(cat migration.log | grep -c "has been executed successfully")
             - run:
