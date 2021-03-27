@@ -210,15 +210,38 @@ jobs:
                   fingerprints:
                       - "77:26:11:0c:14:af:4d:41:5f:25:8a:c7:d8:02:14:7f"
             - run:
-                echo "Passed"
-                # name: Ensure back-end infrastructure exists
-                  #command: |
-                      #aws cloudformation deploy \
-                          #--template-file .circleci/files/backend.yml \
-                         # --tags project=udapeople \
-                          #--stack-name "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
-                          #--parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
-           
+                  name: Ensure back-end infrastructure exists
+                  command: |
+                      aws cloudformation deploy \
+                          --template-file .circleci/files/backend.yml \
+                          --tags project=udapeople \
+                          --stack-name "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+                          --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+            - run:
+                  name: Ensure front-end infrastructure exist
+                  command: |
+                      aws cloudformation deploy \
+                          --template-file .circleci/files/frontend.yml \
+                          --tags project=udapeople \
+                          --stack-name "frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+                          --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+            - run:
+                  name: Add back-end ip to ansible inventory
+                  command: |
+                      # Your code here
+                      echo "Adding backend ip to inventory"
+                      aws ec2 describe-instances \
+                          --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                          --filters "Name=tag:project,Values=udapeople" \
+                          --output text >> .circleci/ansible/inventory.txt
+                      cat .circleci/ansible/inventory.txt
+            - persist_to_workspace:
+                  root: ~/
+                  paths:
+                      - project/.circleci/ansible/inventory.txt
+            # Here's where you will add some code to rollback on failure
+            - destroy-environment
+
     configure-infrastructure:
         docker:
             # Docker image here that supports Ansible
