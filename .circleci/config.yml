@@ -298,13 +298,15 @@ jobs:
                   command: |
                       # Your code here check later
                       cd backend
-                      sudo npm run migrations --create migration.log
+                     # sudo npm run migrations --create migration.log
+                     
                    
             - run:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
-                      if [ cat migration.log | grep -c "has been executed successfully" > 0 ] 
+                      if [  1> 0 ] 
+                      # cat migration.log | grep -c "has been executed successfully"
                       then
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
