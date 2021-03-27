@@ -29,7 +29,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: PrometheusKeynew 
-      ImageId: ami-920019951886 
+      ImageId: ami-08962a4068733a2b6 
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
