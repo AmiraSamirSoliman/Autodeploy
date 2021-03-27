@@ -18,7 +18,7 @@ commands:
                   when: on_fail
                   command: |
                       # Your code here
-                      aws s3 rb s3://udapeople-<< parameters.workflow-id >> --force  
+                      aws s3 rb s3://prometheus-<< parameters.workflow-id >> --force  
                       aws cloudformation delete-stack \
                           --stack-name "backend-stack-<< parameters.workflow-id >>"
                       aws cloudformation delete-stack \
@@ -51,7 +51,8 @@ commands:
                   when: on_fail
                   command: |
                       # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-                      export SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET  https://udacitybucketproject.s3.us-east-2.amazonaws.com/values/migration_${CIRCLE_WORKFLOW_ID})
+                      export SUCCESS=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET  
+                      https://udacitybucketproject.s3.us-east-2.amazonaws.com/values/migration_${CIRCLE_WORKFLOW_ID})
                       if(( $SUCCESS==1 )); 
                       then
                       cd ~/project/backend
@@ -214,7 +215,7 @@ jobs:
                   command: |
                       aws cloudformation deploy \
                           --template-file .circleci/files/backend.yml \
-                          --tags project=udapeople \
+                          --tags project=prometheus \
                           --stack-name "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
                           --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
@@ -222,7 +223,7 @@ jobs:
                   command: |
                       aws cloudformation deploy \
                           --template-file .circleci/files/frontend.yml \
-                          --tags project=udapeople \
+                          --tags project=prometheus \
                           --stack-name "frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
                           --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
@@ -232,7 +233,7 @@ jobs:
                       echo "Adding backend ip to inventory"
                       aws ec2 describe-instances \
                           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                          --filters "Name=tag:project,Values=udapeople" \
+                          --filters "Name=tag:project,Values=prometheus" \
                           --output text >> .circleci/ansible/inventory.txt
                       cat .circleci/ansible/inventory.txt
             - persist_to_workspace:
@@ -351,7 +352,7 @@ jobs:
                   name: Deploy frontend objects
                   command: |
                       # your code here
-                      aws s3 cp --recursive frontend/dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+                      aws s3 cp --recursive frontend/dist "s3://prometheus-${CIRCLE_WORKFLOW_ID:0:7}"
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
@@ -431,7 +432,7 @@ jobs:
                   name: Frontend smoke test.
                   command: |
                       # your code here
-                      URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com"
+                      URL="http://prometheus-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-2.amazonaws.com"
                       echo $URL
                       if curl -s ${URL} | grep "Welcome"
                       then
@@ -461,7 +462,7 @@ jobs:
                       # your code here
                       aws cloudformation update-stack \
                       --use-previous-template \
-                      --stack-name "udapeople-cloudfront" \
+                      --stack-name "prometheus-cloudfront" \
                       --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7} \
             # Here's where you will add some code to rollback on failure
             - revert-migrations
@@ -498,7 +499,7 @@ jobs:
                   command: |
                       if [ "${OldWorkflowID}" != "" ]
                         then
-                            aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                            aws s3 rm "s3://prometheus-${OldWorkflowID}" --recursive
                             aws cloudformation delete-stack \
                             --stack-name "backend-stack-${OldWorkflowID}"
                             aws cloudformation delete-stack \
@@ -512,35 +513,33 @@ jobs:
 workflows:
     default:
         jobs:
-           # - build-frontend
+            - build-frontend
             - build-backend
-            #- test-frontend:
-                  #requires: [build-frontend]
-            #- test-backend:
-                 # requires: [build-backend]
+            - test-frontend:
+                  requires: [build-frontend]
+            - test-backend:
+                  requires: [build-backend]
             - scan-backend:
                   requires: [build-backend]
-            #- scan-frontend:
-                 # requires: [build-frontend]
+            - scan-frontend:
+                  requires: [build-frontend]
             - deploy-infrastructure:
-                  requires: 
-                      [scan-backend]
-                      #[test-frontend, test-backend, scan-frontend, scan-backend]
-                  #filters:
-                    #  branches:
-                         # only: [main]
+                  requires:                      
+                      [test-frontend, test-backend, scan-frontend, scan-backend]
+                  filters:
+                      branches:
+                          only: [main]
             - configure-infrastructure:
                   requires: [deploy-infrastructure]
             - run-migrations:
                  requires: [configure-infrastructure]
-           # - deploy-frontend:
-                #  requires: [run-migrations]
+            - deploy-frontend:
+                  requires: [run-migrations]
             - deploy-backend:
                   requires: [run-migrations]
-            #- smoke-test:
-                 # requires: [deploy-backend, deploy-frontend]
-            #- cloudfront-update
-            #:
-                  #requires: [smoke-test]
-            #- cleanup:
-                 # requires: [cloudfront-update]
+            - smoke-test:
+                  requires: [deploy-backend, deploy-frontend]
+            - cloudfront-update:
+                  requires: [smoke-test]
+            - cleanup:
+                  requires: [cloudfront-update]
