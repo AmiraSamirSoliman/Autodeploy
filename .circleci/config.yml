@@ -288,10 +288,10 @@ jobs:
             # Checkout code from git
             - checkout
             - aws-cli/setup
+            - write-env-variables
             - restore_cache:
                   keys:
-                      - "backend-build"
-                   
+                      - "backend-build"                   
             - run:
                   name: Run migrations
                   command: |
