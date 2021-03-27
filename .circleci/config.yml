@@ -305,7 +305,7 @@ jobs:
                       make
                       sudo make install
                       npm i migrations
-                      npm run migrations > migration.log
+                      npm run migrations --create migration.log
                       export migration_status=$(cat migration.log | grep -c "has been executed successfully")
             - run:
                   name: Send migration results to memstash
