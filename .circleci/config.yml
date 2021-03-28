@@ -304,6 +304,7 @@ jobs:
                       #sudo ufw status verbose
                       #sudo systemctl restart ssh
                       sudo npm run migrations --create migration.log
+                      cat migration.log
            
             - run:
                   name: Send migration results to memstash
