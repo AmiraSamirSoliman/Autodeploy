@@ -4,8 +4,8 @@ services:
   database:
     image: "postgres"
     environment:
-      - POSTGRES_USER=prometheusdb
-      - POSTGRES_PASSWORD=prometheusdb
-      - POSTGRES_DB=prometheusdb
+      - POSTGRES_USER= prometheusdb
+      - POSTGRES_PASSWORD= prometheusdb
+      - POSTGRES_DB= prometheusdb
     ports:
       - "5532:5432"
