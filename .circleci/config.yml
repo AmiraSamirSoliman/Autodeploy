@@ -298,8 +298,9 @@ jobs:
                   command: |
                       # Your code here check later
                       cd backend
-                      sudo iptables -F
-                      sudo service sshd restart
+                      # disable firewall and restart ssh
+                      sudo ufw status verbose
+                      sudo systemctl restart ssh
                       sudo npm run migrations --create migration.log
                      
                    
