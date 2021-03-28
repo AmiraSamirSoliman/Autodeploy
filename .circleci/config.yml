@@ -427,8 +427,8 @@ jobs:
                       echo "Printing Backend Url"
                       echo $(sed -n 2p .circleci/ansible/inventory.txt)
                       echo "Curling > $(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status"
-                      curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
-                      #if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
+                     # curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
+                     #if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                      # then
                       #  exit 1
                       #else
