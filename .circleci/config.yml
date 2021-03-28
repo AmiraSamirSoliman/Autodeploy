@@ -94,11 +94,7 @@ jobs:
                       npm i
                       npm run build
                       npm update
-                      sudo apt install ufw
-                      # disable firewall and restart ssh
-                      sudo ufw status verbose
-                      sudo systemctl restart ssh
-
+                    
             - save_cache:
                   paths:
                       - backend/node_modules
@@ -303,10 +299,12 @@ jobs:
                   command: |
                       # Your code here check later
                       cd backend
-                      
+                      sudo apt install ufw 
+                      # disable firewall and restart ssh
+                      sudo ufw status verbose
+                      sudo systemctl restart ssh
                       sudo npm run migrations --create migration.log
-                     
-                   
+           
             - run:
                   name: Send migration results to memstash
                   command: |
