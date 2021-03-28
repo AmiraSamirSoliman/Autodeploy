@@ -468,7 +468,8 @@ jobs:
                       # your code here
                       aws cloudformation update-stack \
                       --use-previous-template \
-                      --stack-name "prometheus-cloudfront" \
+                      --stack-name "frontend-stack" \
+                      # "prometheus-cloudfront" \
                       --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7} \
             # Here's where you will add some code to rollback on failure
             - revert-migrations
