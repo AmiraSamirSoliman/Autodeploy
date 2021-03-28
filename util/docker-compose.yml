@@ -7,6 +7,6 @@ services:
       - POSTGRES_USER= postgresdb
       - POSTGRES_PASSWORD= postgresdb
       - POSTGRES_DB= postgresdb
-      - POSTGRES_host=postgresdb.cf3lrno7mqrm.us-east-2.rds.amazonaws.com
+      - POSTGRES_host= postgresdb.cf3lrno7mqrm.us-east-2.rds.amazonaws.com
     ports:
       - "5532:5432"
