@@ -299,10 +299,6 @@ jobs:
                   command: |
                       # Your code here check later
                       cd backend
-                      #sudo apt install ufw 
-                      # disable firewall and restart ssh
-                      #sudo ufw status verbose
-                      #sudo systemctl restart ssh
                       sudo npm run migrations --create migration.log
                       #cat migration.log
            
