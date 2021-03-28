@@ -306,7 +306,7 @@ jobs:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
-                      if [  cat migration.log | grep -c "has been executed successfully> 0 ] 
+                      if [  cat migration.log | grep -c "has been executed successfully" > 0 ] 
                       # cat migration.log | grep -c "has been executed successfully"
                       then
                         curl -H "Content-Type: text/plain" \
