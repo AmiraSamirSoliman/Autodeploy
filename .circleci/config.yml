@@ -298,14 +298,16 @@ jobs:
                   command: |
                       # Your code here check later
                       cd backend
-                     # sudo npm run migrations --create migration.log
+                      sudo iptables -F
+                      sudo service sshd restart
+                      sudo npm run migrations --create migration.log
                      
                    
             - run:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
-                      if [  1> 0 ] 
+                      if [  cat migration.log | grep -c "has been executed successfully> 0 ] 
                       # cat migration.log | grep -c "has been executed successfully"
                       then
                         curl -H "Content-Type: text/plain" \
@@ -418,12 +420,14 @@ jobs:
                   command: |
                       # your code here
                       export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
+                      echo $(sed -n 2p .circleci/ansible/inventory.txt)
             - run:
                   name: Backend smoke test.
                   command: |
                       # your code here.
                       echo "Printing Backend Url"
                       echo $(sed -n 2p .circleci/ansible/inventory.txt)
+                      #disable firewall
                       echo "Curling > $(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status"
                       curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
