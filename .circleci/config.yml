@@ -318,10 +318,10 @@ jobs:
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
                             --request PUT --data  "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}:3030" \
-                            https://api.memstash.io/values/prometheus
+                            https://api.memstash.io/values/prometheus/
                         else
                             echo "No migrassion ran"
-                            exit 1
+                            #exit 1
                       fi
             # Here's where you will add some code to rollback on failure
             - revert-migrations
