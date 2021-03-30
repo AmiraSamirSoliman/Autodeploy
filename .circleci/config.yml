@@ -399,6 +399,7 @@ jobs:
                       export ANSIBLE_HOST_KEY_CHECKING=False
                       ansible-playbook -i .circleci/ansible/inventory.txt \
                       .circleci/ansible/deploy-backend.yml
+                      curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030
             - run:
                   name: Install AWS CLI for rollback
                   when: on_fail
