@@ -306,14 +306,14 @@ jobs:
                       # Your code here check later
                       cd backend
                       sudo npm run migrations --create migration.log
-                      #cat migration.log
+                      export migration_status=$(cat migration.log | grep -c "has been executed successfully")
            
             - run:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
                        echo backend-stack-${CIRCLE_WORKFLOW_ID:0:7}
-                      if [  cat migration.log | grep -c "has been executed successfully" > 0 ] 
+                      if [   $migration_status > 0 ] 
                       # cat migration.log | grep -c "has been executed successfully"
                     
                       then
@@ -355,9 +355,10 @@ jobs:
                       echo ENVIRONMENT=production > "frontend/.env"
                       echo NODE_ENV=production >> "frontend/.env"
                       echo API_URL=http://$(sed -n 2p .circleci/ansible/inventory.txt):3030 >> "frontend/.env"
-                      cat frontend/.env
-                      cat .circleci/ansible/inventory.txt
-                      exit 0
+                      echo API_URL
+                      #cat frontend/.env
+                      #cat .circleci/ansible/inventory.txt
+                      
             - run:
                   name: Build frontend
                   command: |
@@ -437,14 +438,14 @@ jobs:
                       # your code here.
                       echo "Printing Backend Url"
                       echo $(sed -n 2p .circleci/ansible/inventory.txt)
-                      #echo "Curling > $(sed -n 2p .circleci/ansible/inventory.txt):3030"
-                      #curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030
-                      #if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030
-                      #then
-                      #  exit 1
-                     # else
-                       # exit 0
-                     # fi
+                      echo "Curling > $(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status"
+                      curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
+                      if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
+                      then
+                        exit 1
+                      else
+                       exit 0
+                      fi
             - run:
                   name: Frontend smoke test.
                   command: |
