@@ -293,6 +293,8 @@ jobs:
             - checkout
             - aws-cli/setup
             - write-env-variables
+            - attach_workspace:
+                  at: ~/
             - restore_cache:
                   keys:
                       - "backend-build"                   
