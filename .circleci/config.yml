@@ -310,14 +310,14 @@ jobs:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
-                       echo "export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
+                       echo backend-stack-${CIRCLE_WORKFLOW_ID:0:7}
                       if [  cat migration.log | grep -c "has been executed successfully" > 0 ] 
                       # cat migration.log | grep -c "has been executed successfully"
                     
                       then
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
-                            --request PUT --data  \
+                            --request PUT --data  backend-stack-${CIRCLE_WORKFLOW_ID:0:7}:3030 \
                             https://api.memstash.io/values/prometheus
                         else
                             echo "No migrassion ran"
