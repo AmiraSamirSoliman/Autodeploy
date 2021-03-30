@@ -60,6 +60,8 @@ commands:
                       npm run migrations:revert
                       fi
 jobs:
+
+    
     build-frontend:
         docker:
             - image: circleci/node:13.8.0
@@ -318,7 +320,7 @@ jobs:
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
                             --request PUT --data  "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}:3030" \
-                            https://api.memstash.io/values/prometheus/
+                            https://api.memstash.io/values/prometheus/migration_${CIRCLE_WORKFLOW_ID}
                         else
                             echo "No migrassion ran"
                             #exit 1
