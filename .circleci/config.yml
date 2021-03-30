@@ -18,7 +18,7 @@ commands:
                   when: on_fail
                   command: |
                       # Your code here
-                      aws s3 rb s3://prometheus-<< parameters.workflow-id >> --force  
+                      aws s3 rb s3://udapeople-<< parameters.workflow-id >> --force  
                       aws cloudformation delete-stack \
                           --stack-name "backend-stack-<< parameters.workflow-id >>"
                       aws cloudformation delete-stack \
@@ -357,7 +357,7 @@ jobs:
                   name: Deploy frontend objects
                   command: |
                       # your code here
-                      aws s3 cp --recursive frontend/dist "s3://prometheus-${CIRCLE_WORKFLOW_ID:0:7}"
+                      aws s3 cp --recursive frontend/dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
@@ -505,7 +505,7 @@ jobs:
                   command: |
                       if [ "${OldWorkflowID}" != "" ]
                         then
-                            aws s3 rm "s3://prometheus-${OldWorkflowID}" --recursive
+                            aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
                             aws cloudformation delete-stack \
                             --stack-name "backend-stack-${OldWorkflowID}"
                             aws cloudformation delete-stack \
