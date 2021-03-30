@@ -313,7 +313,7 @@ jobs:
                       then
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
-                            --request PUT --data "1" \
+                            --request PUT --data export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt) \
                             https://api.memstash.io/values/prometheus
                         else
                             echo "No migrassion ran"
