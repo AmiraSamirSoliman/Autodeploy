@@ -310,15 +310,18 @@ jobs:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
+                       echo "export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
                       if [  cat migration.log | grep -c "has been executed successfully" > 0 ] 
                       # cat migration.log | grep -c "has been executed successfully"
+                    
                       then
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
-                            --request PUT --data export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt) \
+                            --request PUT --data  \
                             https://api.memstash.io/values/prometheus
                         else
                             echo "No migrassion ran"
+                            exit 1
                       fi
             # Here's where you will add some code to rollback on failure
             - revert-migrations
