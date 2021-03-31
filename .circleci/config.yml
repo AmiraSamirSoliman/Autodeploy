@@ -265,7 +265,7 @@ jobs:
                   command: |
                       # Your code here
                       apk add --update ansible
-                      echo "Ansible inventories >> Requires for the next job"
+                       echo "Ansible inventories >> Requires for the next job"
                       cat .circleci/ansible/inventory.txt
             - write-env-variables
             - run:
@@ -274,7 +274,9 @@ jobs:
                   command: |
                       echo "Print directory"
                       ls -la
-                      ansible-playbook -i .circleci/ansible/inventory.txt \
+                      echo "[defaults]"  >> .circleci/ansible/inventory.txt
+                      echo " host_key_checking = False" .circleci/ansible/inventory.txt
+                       ansible-playbook -i .circleci/ansible/inventory.txt \
                       .circleci/ansible/configure-server.yml
             # Here's where you will add some code to rollback on failure
             - run:
