@@ -215,19 +215,18 @@ jobs:
             - run:
                   name: Ensure back-end infrastructure exists
                   command: |
-                     echo ${CIRCLE_WORKFLOW_ID}
-                     aws cloudformation deploy \
-                        --template-file .circleci/files/backend.yml \
-                         --tags project=prometheus \
-                         --stack-name "backend-stack-${CIRCLE_WORKFLOW_ID}" 
-                         --parameter-overrides ID=${CIRCLE_WORKFLOW_ID}
+                      aws cloudformation deploy \
+                          --template-file .circleci/files/backend.yml \
+                          --tags project=prometheus \
+                          --stack-name "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+                          --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
                   name: Ensure front-end infrastructure exist
                   command: |
                       aws cloudformation deploy \
                           --template-file .circleci/files/frontend.yml \
                           --tags project=prometheus \
-                          --stack-name "frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" 
+                          --stack-name "frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
                           --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
                   name: Add back-end ip to ansible inventory
@@ -522,5 +521,5 @@ jobs:
 workflows:
     default:
         jobs:
-                - deploy-infrastructure
+            - deploy-infrastructure
             
