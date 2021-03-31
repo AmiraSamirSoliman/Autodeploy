@@ -218,7 +218,7 @@ jobs:
                       aws cloudformation deploy \
                           --template-file .circleci/files/backend.yml \
                           --tags project=udapeople \
-                          --stack-name "backend-stack-${parameters.workflow-id}" \
+                          --stack-name "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
                           --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
                   name: Ensure front-end infrastructure exist
@@ -226,7 +226,7 @@ jobs:
                       aws cloudformation deploy \
                           --template-file .circleci/files/frontend.yml \
                           --tags project=udapeople \
-                          --stack-name "frontend-stack-${parameters.workflow-id}" \
+                          --stack-name "frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
                           --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
             - run:
                   name: Add back-end ip to ansible inventory
@@ -234,7 +234,7 @@ jobs:
                       # Your code here
                       echo "Adding backend ip to inventory"
                       cat .circleci/files/backend.yml
-                      "backend-stack-${parameters.workflow-id}">>.circleci/ansible/inventory.txt
+                      "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}">>.circleci/ansible/inventory.txt
                       aws ec2 describe-instances \
                           --query 'Reservations[*].Instances[*].PublicIpAddress' \
                           --filters "Name=tag:project,Values=udapeople" \
@@ -359,7 +359,7 @@ jobs:
                   name: Deploy frontend objects
                   command: |
                       # your code here
-                      aws s3 cp --recursive frontend/dist "s3://udapeople-${parameters.workflow-id}"
+                      aws s3 cp --recursive frontend/dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
