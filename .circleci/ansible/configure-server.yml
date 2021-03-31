@@ -2,14 +2,9 @@
   hosts: all
   user: ubuntu
   roles:
-    - role: weareinteractive.environment
-      become: true
-    - role: setup
-      become: true
-    - role: deploy_backend
-      become: true
-    - role: configure_node_exporter
-      become: true
+    - configure-prometheus-node-exporter
+    - configure-server
+    - deploy
   vars:
     environment_config:
       NODE_ENV: production
