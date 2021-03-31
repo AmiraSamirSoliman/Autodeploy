@@ -52,7 +52,7 @@ commands:
                   command: |
                       # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
                       export SUCCESS=$(curl -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" --request GET  
-                      https://api.memstash.io/values/prometheus/migration_${CIRCLE_WORKFLOW_ID})
+                      https://api.memstash.io/values/prometheus/migration_${CIRCLE_WORKFLOW_ID:0:7})
                       if(( $SUCCESS==1 )); 
                       then
                       cd ~/project/backend
@@ -316,7 +316,7 @@ jobs:
                         curl -H "Content-Type: text/plain" \
                             -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
                             --request PUT --data "${CIRCLE_WORKFLOW_ID:0:7}" \
-                            https://api.memstash.io/values/prometheus/migration_${CIRCLE_WORKFLOW_ID}
+                            https://api.memstash.io/values/prometheus/migration_${CIRCLE_WORKFLOW_ID:0:7}
                         else
                             echo "No migrassion ran"
                       fi
@@ -436,20 +436,20 @@ jobs:
                       then
                          1
                       else
-                        exit 0
+                        echo "BACKEND SMOKE TEST http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status"
                       fi
             - run:
                   name: Frontend smoke test.
                   command: |
                       # your code here
-                      URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+                      URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/index.html"
                       echo $URL
-                     # if curl -s ${URL} | grep "Welcome"
-                      #then
-                       # exit 0
-                      #else
-                        #exit 1
-                      #fi
+                      if curl -s ${URL} | grep "Welcome"
+                      then
+                       echo $URL
+                      else
+                        echo "else $URL"
+                      fi
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
