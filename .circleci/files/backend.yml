@@ -13,13 +13,13 @@ Resources:
       GroupDescription: Allow port 22 and port 3030.
       SecurityGroupIngress:
         - IpProtocol: tcp
-             FromPort: 22
-             ToPort: 22
-             CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-            FromPort: 3030
-             ToPort: 3030
-             CidrIp: 0.0.0.0/0
+          FromPort: 3030
+          ToPort: 3030
+          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
              FromPort: 9090
              ToPort: 9090
@@ -46,6 +46,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+   
   Outputs:
      PublicDnsName:
      Description: Server Public DNS Name
