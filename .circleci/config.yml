@@ -241,14 +241,14 @@ jobs:
                           --output text >> .circleci/ansible/inventory.txt
                  
                         PUBLIC_DNS=$(aws ec2 describe-instances --region ${AWS_DEFAULT_REGION} \
-                        --filters "Name=tag:Name,Values=prometheus" \
-                         --query "Reservations[*].Instances[0].PublicDnsName" --output text)
-                        echo ${PUBLIC_DNS}
+                            --query 'Reservations[*].Instances[0].PublicDnsName' \
+                            --filters "Name=tag:Name,Values=prometheus" \
+                            --output text)
+                            echo "PUBLIC_DNS"
+                            echo ${PUBLIC_DNS}
                          curl -H "Content-Type: text/plain" \
-                          -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
-                              --request PUT \
-                                 --data ${PUBLIC_DNS} \
-                         https://api.memstash.io/values/prometheus/public_dns         
+                              -H  "token: 529e0963-2034-4398-be8b-683a06cf07ce"  \
+                               --request PUT  --data "${PUBLIC_DNS}"  https://api.memstash.io/values/prometheus/public_dns         
 
             - persist_to_workspace:
                   root: ~/
