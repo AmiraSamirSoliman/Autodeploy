@@ -437,7 +437,7 @@ jobs:
                       echo "Printing Backend Url"
                       echo $BACKEND_URL
                      
-                      if curl -s $BACKEND_URL
+                      if curl -s http://${BACKEND_IP}:3030/api/status
                       then
                          1
                       else
