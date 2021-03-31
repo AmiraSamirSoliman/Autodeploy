@@ -234,7 +234,7 @@ jobs:
                       # Your code here
                       echo "Adding backend ip to inventory"
                       cat .circleci/files/backend.yml
-                      "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}">>.circleci/ansible/inventory.txt
+                      echo "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}">>.circleci/ansible/inventory.txt
                       aws ec2 describe-instances \
                           --query 'Reservations[*].Instances[*].PublicIpAddress' \
                           --filters "Name=tag:project,Values=udapeople" \
