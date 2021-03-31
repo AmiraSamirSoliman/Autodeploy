@@ -437,12 +437,12 @@ jobs:
                       echo "Printing Backend Url"
                       echo $BACKEND_URL
                      
-                      if curl -s http://${BACKEND_IP}:3030/api/status
-                      then
-                         1
-                      else
-                        echo "BACKEND SMOKE TEST $BACKEND_URL"
-                      fi
+                     # if curl -s http://${BACKEND_IP}:3030/api/status
+                      #then
+                        # 1
+                     # else
+                       # echo "BACKEND SMOKE TEST $BACKEND_URL"
+                     # fi
             - run:
                   name: Frontend smoke test.
                   command: |
