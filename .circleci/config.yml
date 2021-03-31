@@ -234,19 +234,29 @@ jobs:
                       # Your code here
                       echo "Adding backend ip to inventory"
                       cat .circleci/files/backend.yml
-                      #echo "backend-stack-${CIRCLE_WORKFLOW_ID:0:7}">>.circleci/ansible/inventory.txt
-                      aws ec2 describe-instances \
+                      
+                        aws ec2 describe-instances \
                           --query 'Reservations[*].Instances[*].PublicIpAddress' \
                           --filters "Name=tag:project,Values=prometheus" \
                           --output text >> .circleci/ansible/inventory.txt
-                      cat .circleci/ansible/inventory.txt
+                 
+                        PUBLIC_DNS=$(aws ec2 describe-instances --region ${AWS_DEFAULT_REGION} \
+                        --filters 'Name=tag:Name,Values=prometheus' \
+                         --query "Reservations[*].Instances[0].PublicDnsName" --output text)
+                        echo ${PUBLIC_DNS}
+                         curl -H "Content-Type: text/plain" \
+                          -H "token: 529e0963-2034-4398-be8b-683a06cf07ce" \
+                              --request PUT \
+                                 --data ${PUBLIC_DNS} \
+                         https://api.memstash.io/values/prometheus/public_dns         
+
             - persist_to_workspace:
                   root: ~/
                   paths:
                       - project/.circleci/ansible/inventory.txt
             # Here's where you will add some code to rollback on failure
             - destroy-environment
-
+            
     configure-infrastructure:
         docker:
             # Docker image here that supports Ansible
@@ -264,7 +274,7 @@ jobs:
                   name: Install dependencies
                   command: |
                       # Your code here
-                      apk add --update ansible
+                       apk add --update ansible
                        echo "Ansible inventories >> Requires for the next job"
                       cat .circleci/ansible/inventory.txt
             - write-env-variables
@@ -387,6 +397,13 @@ jobs:
                   command: |
                       # your code here
                       apk add --update ansible openssh-client tar gzip
+                      apk add --no-cache curl
+                      apk add --no-cache --upgrade bash
+                      apk add --no-cache --update ansible
+                      apk add --no-cache openssh-client
+                      pip3 install awscli
+           
+                     
             - restore_cache:
                   keys:
                       - "backend-dist"
@@ -395,17 +412,18 @@ jobs:
                   name: copy backend objects
                   command: |
                       # your code here
-                       echo "- hosts: blocks" >>.circleci/ansible/inventory.txt
-                       echo "  tasks:" >>.circleci/ansible/inventory.txt
-                       echo "     name: Ansible copy directory to the remote server" >>.circleci/ansible/inventory.txt
-                       echo "     copy:">>.circleci/ansible/inventory.txt
-                       echo "     src:./dist">>.circleci/ansible/inventory.txt
-                       echo "      dest:.circleci/ansible/roles/deploy/tasks/">>.circleci/ansible/inventory.txt
+                      PUBLIC_DNS=$(curl -H "token: 529e0963-2034-4398-be8b-683a06cf07ce " --request GET https://api.memstash.io/values/prometheus/public_dns)
+                      echo ${PUBLIC_DNS}
+                      cd .circleci/ansible/
+                      echo "[all]" > ./inventory.txt
+                      echo ${PUBLIC_DNS} >> ./inventory.txt
+                                           
                       
             - run:
                   name: Deploy backend
                   no_output_timeout: 30m
                   command: |
+                      printenv >> ./backend/.env
                       export ANSIBLE_HOST_KEY_CHECKING=False
                       ansible-playbook -i .circleci/ansible/inventory.txt \
                       .circleci/ansible/deploy-backend.yml
