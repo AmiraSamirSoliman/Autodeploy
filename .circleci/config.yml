@@ -392,11 +392,6 @@ jobs:
                       - "backend-dist"
             - write-env-variables
             - run:
-                  name: Build backend
-                  command: |
-                      cd backend
-                      npm run build
-            - run:
                   name: copy backend objects
                   command: |
                       # your code here
