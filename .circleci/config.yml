@@ -391,7 +391,7 @@ jobs:
                   keys:
                       - "backend-dist"
             - write-env-variables
-             - run:
+            - run:
                   name: Build backend
                   command: |
                       cd backend
