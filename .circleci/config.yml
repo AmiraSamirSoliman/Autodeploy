@@ -241,7 +241,7 @@ jobs:
                           --output text >> .circleci/ansible/inventory.txt
                  
                         PUBLIC_DNS=$(aws ec2 describe-instances --region ${AWS_DEFAULT_REGION} \
-                        --filters 'Name=tag:Name,Values=prometheus' \
+                        --filters "Name=tag:Name,Values=prometheus" \
                          --query "Reservations[*].Instances[0].PublicDnsName" --output text)
                         echo ${PUBLIC_DNS}
                          curl -H "Content-Type: text/plain" \
