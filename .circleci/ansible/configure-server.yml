@@ -2,7 +2,7 @@
   hosts: all
   user: ubuntu
   roles:
-   - role: deploy_backend
+   - role: deploy
       become: true
     - role: configure_node_exporter
       become: true
