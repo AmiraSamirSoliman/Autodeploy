@@ -4,7 +4,7 @@
   roles:
    - role: deploy
       become: true
-    - role: configure_node_exporter
+    - role: configure-prometheus-node-exporter
       become: true
   vars:
     environment_config:
