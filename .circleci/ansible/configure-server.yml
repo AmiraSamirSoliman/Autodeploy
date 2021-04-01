@@ -3,9 +3,9 @@
   user: ubuntu
   roles:
    - role: configure-server
-      become: true
+     become: true
    - role: deploy
-      become: true
+     become: true
     - role: configure-prometheus-node-exporter
       become: true
   vars:
