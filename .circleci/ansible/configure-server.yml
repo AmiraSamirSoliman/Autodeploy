@@ -6,8 +6,9 @@
      become: true
    - role: deploy
      become: true
-    - role: configure-prometheus-node-exporter
-      become: true
+   - role: configure-prometheus-node-exporter
+     become: true
+     
   vars:
     environment_config:
       NODE_ENV: production
