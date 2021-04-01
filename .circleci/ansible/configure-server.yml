@@ -2,6 +2,8 @@
   hosts: all
   user: ubuntu
   roles:
+   - role: configure-server
+      become: true
    - role: deploy
       become: true
     - role: configure-prometheus-node-exporter
